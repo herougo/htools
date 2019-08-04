@@ -22,11 +22,11 @@ def gen_blocked_code(prefix, condition, code_block):
     new_code_block = '\n'.join([PYTHON_CODE_INDENT + line for line in code_block.split('\n')])
     return header_line + '\n' + new_code_block
 
-        
+
 def gen_if_elif_block_code(conditions, code_blocks):
     # example: gen_if_elif_block_code(['foo is None', 'foo in bar'], ['assert foo is None', 'pass'])
     if len(conditions) != len(code_blocks):
-        raise ValueError('Lengths are not equal:\n{}\n{}'.format(conditions, code_blocks)
+        raise ValueError('Lengths are not equal:\n{}\n{}'.format(conditions, code_blocks))
     if_blocks = []
     for i in range(len(conditions)):
         condition = conditions[i]
