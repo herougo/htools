@@ -76,3 +76,4 @@ def fn_binary_search(fn, lower, upper, target):
             upper = x
 
     return -1
+
