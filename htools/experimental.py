@@ -57,3 +57,22 @@ def split_tvt(data, split, lengths=None):
                 break
     
     return data[:val_start], data[val_start:test_start], data[test_start:]
+
+# ALGORITHMS
+
+
+def fn_binary_search(fn, lower, upper, target):
+    # lower <= x < upper
+    while lower < upper:   # use < instead of <=
+        x = lower + (upper - lower) // 2
+        val = fn(x)
+        if target == val:
+            return x
+        elif target > val:
+            if lower == x:   # these two are the actual lines
+                break        # you're looking for
+            lower = x
+        elif target < val:
+            upper = x
+
+    return -1

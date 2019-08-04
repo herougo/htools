@@ -118,3 +118,11 @@ def pickle_dump(obj, file_path):
     assert isinstance(file_path, str)
     with open(file_path, 'wb') as f:
         return pickle.dump(obj, f)
+
+
+def file_path_to_file_name(path):
+    return os.path.basename(path)
+
+def parent_dir(path):
+    return os.path.abspath(os.path.join(path, os.pardir))
+

@@ -8,6 +8,7 @@
   - problem: but then you don't need to import
     - set as local I guess?
   - problem: what's the point of this again?
+  - also consider v2 functions, etc
 
 # Minor To Do
 
