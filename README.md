@@ -13,6 +13,10 @@
 # Minor To Do
 
 - runnable example registry? (replace RUNNABLE comments)
+- migrate from
+  - CodeBank
+  - CodeBankInterfacesExperimentation
+  - migrate from toreuse.py
 
 # Major To Do
 
