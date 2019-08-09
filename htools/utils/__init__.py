@@ -21,6 +21,6 @@ def round_number(n, n_decimal_places):
 
 def get_python_version():
     """
-    :return: float I think?
+    :return: str I think?
     """
     return sys.version_info[0]

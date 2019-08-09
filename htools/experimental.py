@@ -77,3 +77,41 @@ def fn_binary_search(fn, lower, upper, target):
 
     return -1
 
+# OTHER
+
+import inspect
+import warnings
+
+def unnecessary_wrapper(func):
+    def warn_and_call(*args, **kwargs):
+        source_code = inspect.getsource(func)
+        warnings.warn('{} is unnecessary. Use this code instead:\n{}'.format(
+            func.__name__, source_code))
+        return func(*args, **kwargs)
+    return authenticate_and_call
+
+
+
+def readable_sec(seconds):
+    """
+    :param seconds: int seconds
+    :returns: string e.g. 12 days, 4 hours, 3 min, 4 sec
+    """
+    c = int(c)
+    days = (c // 86400)
+    hours = (c // 3600) % 24
+    minutes = (c // 60) % 60
+    seconds = c % 60
+    result = ""
+    if days > 0:
+        result += str(days) + " days, "
+    if hours > 0:
+        result += str(hours) + " hrs, "
+    if minutes > 0:
+        result += str(minutes) + " min, "
+    result += str(seconds) + " sec"
+    return result
+
+def normalize(arr):
+    arr = np.array(arr)
+    return (arr - np.mean(arr)) / np.std(arr)

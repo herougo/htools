@@ -109,7 +109,6 @@ def dir_to_size(dir_path):
         total_size /= 1000
     raise BaseException(f"Directory is too big: {total_size} PB")
 
-
 def pickle_load(file_path):
     with open(file_path, 'rb') as f:
         return pickle.load(f)
@@ -118,7 +117,6 @@ def pickle_dump(obj, file_path):
     assert isinstance(file_path, str)
     with open(file_path, 'wb') as f:
         return pickle.dump(obj, f)
-
 
 def file_path_to_file_name(path):
     return os.path.basename(path)
