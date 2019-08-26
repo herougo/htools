@@ -80,6 +80,17 @@ def export_var_from_notebook(var):
     (3h)
     '''
 
+def assert_to_unittest(source_code):
+    '''
+    input: file making asserts lazily
+    output: properly formatted unittest files
+    '''
+
+def separate_python_functions(source_code):
+    '''
+    input: python file of unrefactored code
+    output: N python files with each function in the input file moved there to test.
+    '''
 
 
 

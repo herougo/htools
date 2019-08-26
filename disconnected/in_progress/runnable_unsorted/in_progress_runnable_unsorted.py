@@ -296,3 +296,27 @@ def example_remove_python_variable_from_global_scope():
 
 
 
+def add_to_path(x):
+    if isinstance(x, str):
+        sys.path.insert(0, f'/Users/hromel/Documents/github/{x}')
+    elif isinstance(x, list):
+        for name in x:
+            add_to_path(name)
+    else:
+        raise ValueError('Unsupported type')
+        
+def env_variables(x):
+    """
+    input: e.g. "ENV=staging\nTHING=hi"
+    output: e.g. set(["ENV", "THING"])
+    """
+    return set([line[:line.index('=')]for line in x.split('\n') if '=' in line])
+
+def compare_env(env_contents1, env_contents2):
+    # inputs format: e.g. "ENV=staging\nTHING=hi"
+    env1 = env_variables(env_contents1)
+    env2 = env_variables(env_contents2)
+    print('(1) - (2)', env1 - env2)
+    print('(2) - (1)', env2 - env1)
+
+
