@@ -136,3 +136,163 @@ def es_query(host, index, body, doc_type, get, match, result, port=9200, size=10
 
 # OTHER
 
+
+
+
+# UNSORTED
+
+def is_same_price(float1, cloat2):
+  return abs(float1 - float2) <= 0.0001
+
+def is_protobuf(var):
+    # is this correct?
+    from google.protobuf.message import Message
+    return isinstance(var, Message)
+
+def is_repeatable_protobuf(var):
+    # is this correct?
+    return is_protobuf(var) and hasattr(var, 'add')
+
+def dump_protobuf(obj):
+    for descriptor in obj.DESCRIPTOR.fields:
+        value = getattr(obj, descriptor.name)
+        if descriptor.type == descriptor.TYPE_MESSAGE:
+            if descriptor.label == descriptor.LABEL_REPEATED:
+                map(dump_object, value)
+            else:
+                dump_object(value)
+        elif descriptor.type == descriptor.TYPE_ENUM:
+            enum_name = descriptor.enum_type.values[value].name
+            print("%s: %s" % (descriptor.full_name, enum_name))
+        else:
+            print("%s: %s" % (descriptor.full_name, value))
+
+
+def iter_recursive_protobuf_fields(obj):
+    # stackoverflow
+    for descriptor in obj.DESCRIPTOR.fields:
+        value = getattr(obj, descriptor.name)
+        if descriptor.type == descriptor.TYPE_MESSAGE:
+            if descriptor.label == descriptor.LABEL_REPEATED:
+                for val in value:
+                    for result in iter_recursive_protobuf_fields(val):
+                        yield result
+            else:
+                for result in iter_recursive_protobuf_fields(value):
+                    yield result
+        elif descriptor.type == descriptor.TYPE_ENUM:
+            enum_name = descriptor.enum_type.values[value].name
+            yield descriptor.full_name, enum_name, True
+        else:
+            yield descriptor.full_name, value, False
+
+def dump_protobuf(obj):
+    for full_name, value, is_enum in iter_recursive_protobuf_fields(obj):
+        print('{}: {}'.format(full_name, value))
+    
+
+
+def iter_recursive_protobuf_fields(obj):
+    # inefficient
+    def iter_recursive_protobuf_fields_helper(obj, full_name_path):
+        for descriptor in obj.DESCRIPTOR.fields:
+            value = getattr(obj, descriptor.name)
+            if descriptor.type == descriptor.TYPE_MESSAGE:
+                if descriptor.label == descriptor.LABEL_REPEATED:
+                    full_path = '{}.{}'.format(full_name_path, descriptor.name)
+                    yield full_path, descriptor.name, value, False
+                    for i, val in enumerate(value):
+                        full_path = '{}.{}[{}]'.format(full_name_path, descriptor.name, i)
+                        descriptor_name = '{}[{}]'.format(descriptor.name, i)
+                        yield full_path, descriptor_name, val, False
+                        for result in iter_recursive_protobuf_fields_helper(val, full_path):
+                            yield result
+                else:
+                    full_path = '{}.{}'.format(full_name_path, descriptor.name)
+                    yield full_path, descriptor.name, value, False
+                    for result in iter_recursive_protobuf_fields_helper(value, full_path):
+                        yield result
+            elif descriptor.type == descriptor.TYPE_ENUM:
+                enum_name = descriptor.enum_type.values[value].name
+                yield full_name_path, descriptor.name, enum_name, True
+            else:
+                yield full_name_path, descriptor.name, value, False
+    
+    for result in iter_recursive_protobuf_fields_helper(obj, ''):
+        yield result
+
+
+def lazy_proto_get(obj, key, where=None, default=None):
+    #global dbg_keys_seen
+    #dbg_keys_seen = set()
+    def lazy_get_yield(obj, key, where=None):
+        if isinstance(obj, dict):
+            if key in obj:
+                if where is None or dict_subset_of(where, obj):
+                    yield obj[key]
+            else:
+                for val in obj.values():
+                    for result in lazy_get_yield(val, key, where):
+                        yield result
+        elif isinstance(obj, (list, tuple)):
+            for val in obj:
+                for result in lazy_get_yield(val, key, where):
+                    yield result
+        elif is_protobuf(obj):
+            for _, proto_key, proto_value, _ in iter_recursive_protobuf_fields(obj):
+                #dbg_keys_seen.add(proto_key)
+                if proto_key == key:
+                    yield proto_value
+        
+    results = list(lazy_get_yield(obj, key, where))
+    if len(results) == 0:
+        return default
+    return results[0]
+
+
+def my_log2(file_type, arg):
+    # logs output to a file in a useful manner
+    # TODO: Save to directory by date
+
+    # import pprint
+    # pprint.PrettyPrinter(indent=2).pprint(*args)
+
+    file_path = f'/Users/hromel/temp/logs/high_detail_search/1_{file_type}_log.txt'
+    f = open(file_path, 'w')
+    f.write(str(arg) + '\n')
+    f.close()
+
+
+def my_log(file_type, arg, type='w'):
+    # logs output to a file in a useful manner
+    # TODO: Save to directory by date
+
+    # import pprint
+    # pprint.PrettyPrinter(indent=2).pprint(*args)
+
+    file_path = f'/Users/hromel/temp/logs/prebook/1_{file_type}_log.txt'
+    f = open(file_path, type)
+    import pprint
+    text = pprint.pformat(arg, indent=4)
+    f.write(text  + '\n')
+    f.close()
+
+def get_log(file_type):
+    # logs output to a file in a useful manner
+    # TODO: Save to directory by date
+
+    # import pprint
+    # pprint.PrettyPrinter(indent=2).pprint(*args)
+
+    file_path = f'/Users/hromel/temp/logs/prebook/1_{file_type}_log.txt'
+    return file_to_string(file_path)
+
+def example_remove_python_variable_from_global_scope():
+    global x
+    x = 0
+    d = [x]
+    del x
+    # x is undefined, but d still has access to it
+
+
+

@@ -115,3 +115,17 @@ def readable_sec(seconds):
 def normalize(arr):
     arr = np.array(arr)
     return (arr - np.mean(arr)) / np.std(arr)
+
+from google.protobuf import text_format
+def parse_from_text_plain_string(empty_proto, text: str):
+    return text_format.Merge(text, empty_proto)  # returns empty_proto (which was modified)
+
+import datetime
+def date_to_human_readable(date):
+    # returns e.g. "Aug-22-2019"
+    month_name = date.strftime("%B")
+    return '{}-{}-{}'.format(month_name[:3], date.day, date.year)
+
+def num_to_string_n_decimal_places(number, n):
+    return '%.{}f'.format(n) % number
+

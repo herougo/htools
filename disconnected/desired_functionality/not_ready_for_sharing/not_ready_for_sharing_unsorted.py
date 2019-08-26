@@ -65,3 +65,22 @@ def send_image_via_flask(image_path):
 
 def parse_research_paper_pdf(pdf_path):
     pass
+
+def get_joke_or_meme_dataset():
+    pass
+
+def lazy_file_to_sting(path):
+    pass
+
+def clazy_file_to_string(path): # lazy with cache
+    pass
+
+def export_var_from_notebook(var):
+    ''' Return string of .py code required to use var in a gist.
+    (3h)
+    '''
+
+
+
+
+
