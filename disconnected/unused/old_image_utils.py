@@ -17,7 +17,7 @@ def grayscale_to_normal(img):
     return PIL.ImageOps.colorize(img)
     
 def img_to_numpy(img):
-    # shape: (height, width, 3)
+    # result shape: (height, width, 3)
     return np.asarray(img)
     
 def numpy_to_img(np_img):
@@ -33,6 +33,12 @@ def proper_numpy_to_img(np_img):
 
 def rotate(img, rotate_degrees):
     return img.rotate(rotate_degrees)
+
+''' Image co-ordinates
+(0, 0) (0, 1) ...
+(1, 0) (1, 1) ...
+...
+'''
 
 def img_paste_text(img, text, x, y, opacity=255, centre=True, colour=(0, 0, 0)):
     txt = PIL.Image.new('RGBA', img.size, (0, 0, 0, 0,))
@@ -61,7 +67,7 @@ def img_paste_line(img, x1, y1, x2, y2, opacity=255, colour=(0, 0, 0), width=0):
     line = PIL.Image.new('RGBA', img.size, (0, 0, 0, 0,))
     d = PIL.ImageDraw.Draw(line)
     d.line((x1, y1, x2, y2), fill=colour + (opacity,), width=width)
-    return PIL.Image.alpha_composite(img, circle)
+    return PIL.Image.alpha_composite(img, line)
     
 def img_paste_resized_text(img, text, x, y, opacity=255, centre=True, colour=(0, 0, 0)):
     txt = PIL.Image.new('RGBA', img.size, (0, 0, 0, 0,))
@@ -128,6 +134,10 @@ def resize_v2(img, size, preserve_aspect_ratio=True):
     else:
         img = img.resize((width, height))
     return result
+
+def binary_np_to_img(data):
+    # fail: return PIL.Image.fromarray(data * 255, mode='L').convert('1')
+    return PIL.Image.fromarray(np.uint8(a * 255) , 'L')
     
 
 
@@ -162,3 +172,6 @@ def keypoint_resize(keypoints, old_size, new_size, preserve_aspect_ratio=True):
 def keypoint_horizontal_flip(keypoints, size):
     width, height = size
     return [(width - x, y) for x, y in keypoints]
+
+
+
